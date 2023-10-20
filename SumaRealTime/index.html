@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suma de Números</title>
+</head>
+<body>
+    <form>
+        <label for="numero1">Número 1:</label>
+        <input type="number" id="numero1" required><br><br>
+
+        <label for="numero2">Número 2:</label>
+        <input type="number" id="numero2" required><br><br>
+
+        <label for="numero3">Número 3:</label>
+        <input type="number" id="numero3" required><br><br>
+
+        <button type="button" id="enviar">Enviar</button>
+    </form>
+
+    <p>Resultado:</p>
+    <p id="resultado"></p>
+
+    <script>
+        document.getElementById('enviar').addEventListener('click', function() {
+            const numero1 = document.getElementById('numero1').value;
+            const numero2 = document.getElementById('numero2').value;
+            const numero3 = document.getElementById('numero3').value;
+
+            // Realiza una solicitud POST al servidor Python para enviar los números
+            fetch('/sumar_numeros', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    numero1: parseFloat(numero1),
+                    numero2: parseFloat(numero2),
+                    numero3: parseFloat(numero3)
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Muestra el resultado en la página
+                document.getElementById('resultado').textContent = `Resultado: ${data.resultado}`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

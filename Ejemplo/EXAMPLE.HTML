@@ -1,0 +1,50 @@
+# -*- coding: utf-8 -*-
+
+import smtplib
+import psutil
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+# Obtener información sobre la memoria RAM del sistema
+ram = psutil.virtual_memory()
+ram_total = round(ram.total / (1024.0 ** 3), 2)  # Convertir a GB y redondear a 2 decimales
+ram_disponible = round(ram.available / (1024.0 ** 3), 2)  # Convertir a GB y redondear a 2 decimales
+
+# Configura los detalles del servidor SMTP de Gmail
+smtp_server = 'smtp.gmail.com'
+smtp_port = 587  # Puerto estándar para TLS
+
+# Tu dirección de correo y contraseña (reemplázalas por tus propias credenciales)
+smtp_username = 'Josephfabrizizo@gmail.com'
+smtp_password = 'uftr oavl byqr bvde'  # Reemplaza 'tu_contraseña' con tu contraseña real
+
+# Crea el objeto MIMEMultipart
+msg = MIMEMultipart()
+
+# Detalles del correo
+msg['From'] = 'Josephfabrizizo@gmail.com'
+msg['To'] = 'Josephfabrizziocuentas@gmail.com'
+msg['Subject'] = 'Información sobre la RAM del Sistema'
+
+# Contenido HTML con la información sobre la RAM
+html_content = f"""
+<html>
+<head></head>
+<body>
+<h1>Información sobre la RAM del Sistema</h1>
+<p>RAM Total: {ram_total} GB</p>
+<p>RAM Disponible: {ram_disponible} GB</p>
+</body>
+</html>
+"""
+
+# Adjunta el contenido HTML al mensaje
+msg.attach(MIMEText(html_content, 'html'))
+
+# Inicia la conexión SMTP y envía el correo
+with smtplib.SMTP(smtp_server, smtp_port) as server:
+    server.starttls()  # Inicia una conexión TLS segura
+    server.login(smtp_username, smtp_password)
+    server.sendmail(smtp_username, msg['To'], msg.as_string())
+
+print('Correo enviado exitosamente')
